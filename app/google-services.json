@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "807699111593",
+    "firebase_url": "https://chat-a-box-tutorial.firebaseio.com",
+    "project_id": "chat-a-box-tutorial",
+    "storage_bucket": "chat-a-box-tutorial.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:807699111593:android:18bf4df7ccae357d",
+        "android_client_info": {
+          "package_name": "com.bradleypmartinsandbox.chat_a_box_tutorial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "807699111593-g7esvkukc6ocbi99ajuckts05fd167hn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVeQWVP4uM8zsEDzjnyqanpjk9k4kEizM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
