@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         app = FirebaseApp.getInstance();
         auth = FirebaseAuth.getInstance(app);
 
+        logoutUser();
+
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -53,5 +55,9 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         auth.addAuthStateListener(authStateListener);
+    }
+
+    private void logoutUser() {
+        auth.signOut();
     }
 }
