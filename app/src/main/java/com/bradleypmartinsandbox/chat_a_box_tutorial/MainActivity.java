@@ -1,5 +1,6 @@
 package com.bradleypmartinsandbox.chat_a_box_tutorial;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,13 +39,16 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser user = auth.getCurrentUser();
 
                 if (user != null) {
-                    Log.i(TAG, "Status update : valid current user logged on : email [" +
+                    Log.i(TAG, "Auth state update : valid current user logged on : email [" +
                             user.getEmail() + "] display name [" +
                             user.getDisplayName() + "]");
                     displayName = user.getDisplayName();
                 } else {
-                    Log.i(TAG, "Status update : no valid current user logged on.");
+                    Log.i(TAG, "Auth state update : no valid current user logged on.");
                     displayName = "Null";
+
+                    Intent signIn = new Intent(getApplicationContext(), SignIn.class);
+                    startActivity(signIn);
                 }
             }
         };
