@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
         app = FirebaseApp.getInstance();
         auth = FirebaseAuth.getInstance(app);
 
-        logoutUser();
-
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -50,14 +50,37 @@ public class MainActivity extends AppCompatActivity {
                     displayName = "Null";
 
                     Intent signIn = new Intent(getApplicationContext(), SignIn.class);
-                    startActivity(signIn);
+                    startActivityForResult(signIn, 101);
                 }
             }
         };
         auth.addAuthStateListener(authStateListener);
     }
 
-    private void logoutUser() {
-        auth.signOut();
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 101 && resultCode == RESULT_OK) {
+            displayName = data.getStringExtra("displayName");
+            Log.i(TAG, "Returned activity display name : [" + displayName +"].");
+            auth.addAuthStateListener(authStateListener);
+        } else {
+
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.options_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.menuLogout) {
+            Log.i(TAG, "Logout option selected.");
+            auth.signOut();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

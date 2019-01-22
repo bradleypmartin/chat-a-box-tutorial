@@ -1,5 +1,6 @@
 package com.bradleypmartinsandbox.chat_a_box_tutorial;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -130,7 +131,11 @@ public class SignIn extends AppCompatActivity {
                 FirebaseUser user = auth.getCurrentUser();
 
                 if (user != null) {
-                    Log.i(TAG, "User is logged in : " + user.getEmail());
+                    displayName = user.getDisplayName();
+                    Log.i(TAG, "User is logged in : email [" +
+                            user.getEmail() + "] display name [" +
+                            displayName + "]");
+                    finishActivity();
                 } else {
                     Log.i(TAG, "No user is logged in.");
                 }
@@ -185,6 +190,17 @@ public class SignIn extends AppCompatActivity {
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(success)
                 .addOnFailureListener(fail);
+    }
+
+    private void finishActivity() {
+
+        Log.i(TAG, "Finishing Sign In activity.");
+
+        Intent returningIntent = new Intent();
+        returningIntent.putExtra("displayName", displayName);
+        setResult(RESULT_OK, returningIntent);
+
+        finish();
     }
 
 }
