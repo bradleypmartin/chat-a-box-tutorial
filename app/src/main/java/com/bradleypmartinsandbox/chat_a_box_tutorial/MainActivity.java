@@ -13,6 +13,9 @@ import android.view.MenuItem;
 import android.widget.TableLayout;
 
 import com.bradleypmartinsandbox.chat_a_box_tutorial.dummy.DummyContent;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,6 +37,8 @@ public class MainActivity extends AppCompatActivity
     FragmentAdapter fragmentAdapter;
     TabLayout mTabLayout;
 
+    private AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +46,11 @@ public class MainActivity extends AppCompatActivity
 
         initFirebase();
         initViewPager();
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544/6300978111");
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     private void initFirebase() {
