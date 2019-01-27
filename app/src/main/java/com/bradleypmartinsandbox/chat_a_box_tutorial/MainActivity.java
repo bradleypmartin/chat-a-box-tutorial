@@ -1,18 +1,26 @@
 package com.bradleypmartinsandbox.chat_a_box_tutorial;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TableLayout;
 
+import com.bradleypmartinsandbox.chat_a_box_tutorial.dummy.DummyContent;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements ChatMessageFragment.OnFragmentInteractionListener,
+        HistoryFragment.OnListFragmentInteractionListener,
+        MembersFragment.OnListFragmentInteractionListener {
 
     final String TAG = "FirebaseTest";
 
@@ -22,12 +30,17 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth.AuthStateListener authStateListener;
     String displayName;
 
+    ViewPager viewPager;
+    FragmentAdapter fragmentAdapter;
+    TabLayout mTabLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         initFirebase();
+        initViewPager();
     }
 
     private void initFirebase() {
@@ -86,5 +99,25 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void initViewPager() {
+        viewPager = findViewById(R.id.viewPager);
+        fragmentAdapter = new FragmentAdapter( getSupportFragmentManager() );
+        viewPager.setAdapter(fragmentAdapter);
+        mTabLayout = findViewById(R.id.tabLayout);
+        mTabLayout.setupWithViewPager(viewPager);
+    }
+
+    public void onFragmentInteraction(Uri uri) {
+        Log.i(TAG, "Chat Fragment");
+    }
+
+    public void onHistoryListFragmentInteraction(DummyContent.DummyItem item) {
+        Log.i(TAG, "History Fragment");
+    }
+
+    public void onMembersListFragmentInteraction(DummyContent.DummyItem item) {
+        Log.i(TAG, "Members Fragment");
     }
 }
