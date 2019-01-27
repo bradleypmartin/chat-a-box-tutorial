@@ -17,6 +17,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class SignIn extends AppCompatActivity {
@@ -135,6 +136,15 @@ public class SignIn extends AppCompatActivity {
                     Log.i(TAG, "User is logged in : email [" +
                             user.getEmail() + "] display name [" +
                             displayName + "]");
+
+                    if (registerInProgress) {
+                        setDisplayName(user);
+                    } else {
+                        displayName = user.getDisplayName();
+                    }
+                    loginInProgress = false;
+                    registerInProgress = false;
+
                     finishActivity();
                 } else {
                     Log.i(TAG, "No user is logged in.");
@@ -190,6 +200,11 @@ public class SignIn extends AppCompatActivity {
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(success)
                 .addOnFailureListener(fail);
+    }
+
+    private void setDisplayName(FirebaseUser user) {
+        UserProfileChangeRequest changeRequest = new UserProfileChangeRequest.Builder().setDisplayName(displayName).build();
+        user.updateProfile(changeRequest);
     }
 
     private void finishActivity() {

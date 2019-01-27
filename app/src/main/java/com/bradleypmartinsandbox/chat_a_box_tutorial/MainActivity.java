@@ -47,8 +47,9 @@ public class MainActivity extends AppCompatActivity {
                     displayName = user.getDisplayName();
                 } else {
                     Log.i(TAG, "Auth state update : no valid current user logged on.");
-                    displayName = "Null";
+                    displayName = "No valid user";
 
+                    auth.removeAuthStateListener(authStateListener);
                     Intent signIn = new Intent(getApplicationContext(), SignIn.class);
                     startActivityForResult(signIn, 101);
                 }
@@ -58,12 +59,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 101 && resultCode == RESULT_OK) {
-            displayName = data.getStringExtra("displayName");
-            Log.i(TAG, "Returned activity display name : [" + displayName +"].");
-            auth.addAuthStateListener(authStateListener);
-        } else {
 
+        Log.i(TAG,"Activity returned");
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 101) {
+                displayName = data.getStringExtra("displayName");
+                Log.i(TAG, "Intent returned display name : [" + displayName + "].");
+                auth.addAuthStateListener(authStateListener);
+            }
         }
     }
 
