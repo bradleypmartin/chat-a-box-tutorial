@@ -22,13 +22,32 @@ public class FragmentAdapter extends FragmentPagerAdapter {
                 page = HistoryFragment.newInstance(1);
                 break;
             case 2:
-                page = MembersFragment.newInstance(1);
+                page = MembersFragment.newInstance(2);
                 break;
             default:
                 page = ChatMessageFragment.newInstance("One","Two");
                 break;
         }
         return page;
+    }
+
+    public CharSequence getPageTitle(int position) {
+        CharSequence result = "";
+
+        switch (position) {
+            case 0:
+                result = "Chat";
+                break;
+            case 1:
+                result = "History";
+                break;
+            case 2:
+                result = "Members";
+                break;
+            default:
+                result = "Error";
+        }
+        return result;
     }
 
 }
