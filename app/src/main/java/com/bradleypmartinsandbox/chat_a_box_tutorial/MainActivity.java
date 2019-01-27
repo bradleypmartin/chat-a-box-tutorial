@@ -13,8 +13,10 @@ import android.view.MenuItem;
 import android.widget.TableLayout;
 
 import com.bradleypmartinsandbox.chat_a_box_tutorial.dummy.DummyContent;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,7 +39,11 @@ public class MainActivity extends AppCompatActivity
     FragmentAdapter fragmentAdapter;
     TabLayout mTabLayout;
 
-    private AdView mAdView;
+    AdView mAdView;
+    AdRequest mBannerAdRequest;
+    InterstitialAd mInterstitialAd;
+
+    int mAdvertCounter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +52,7 @@ public class MainActivity extends AppCompatActivity
 
         initFirebase();
         initViewPager();
-        MobileAds.initialize(this, "ca-app-pub-3940256099942544/6300978111");
-
-        mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        initAdverts();
     }
 
     private void initFirebase() {
@@ -117,6 +119,51 @@ public class MainActivity extends AppCompatActivity
         viewPager.setAdapter(fragmentAdapter);
         mTabLayout = findViewById(R.id.tabLayout);
         mTabLayout.setupWithViewPager(viewPager);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                mAdvertCounter++;
+
+                if (mAdvertCounter >= 5) {
+                    if (mInterstitialAd.isLoaded())
+                        mInterstitialAd.show();
+
+                    mAdvertCounter = 0;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+    }
+
+    private void initAdverts() {
+        MobileAds.initialize(this, "ca-app-pub-1369670350323074~6791506389");
+
+        mAdView = findViewById(R.id.adView);
+        mBannerAdRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(mBannerAdRequest);
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+        });
     }
 
     public void onFragmentInteraction(Uri uri) {
