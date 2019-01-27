@@ -13,6 +13,14 @@ import android.view.MenuItem;
 import android.widget.TableLayout;
 
 import com.bradleypmartinsandbox.chat_a_box_tutorial.dummy.DummyContent;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,7 +28,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity
         implements ChatMessageFragment.OnFragmentInteractionListener,
         HistoryFragment.OnListFragmentInteractionListener,
-        MembersFragment.OnListFragmentInteractionListener {
+        MembersFragment.OnListFragmentInteractionListener, RewardedVideoAdListener {
 
     final String TAG = "FirebaseTest";
 
@@ -34,6 +42,13 @@ public class MainActivity extends AppCompatActivity
     FragmentAdapter fragmentAdapter;
     TabLayout mTabLayout;
 
+    AdView mAdView;
+    AdRequest mBannerAdRequest;
+    InterstitialAd mInterstitialAd;
+    RewardedVideoAd mRewardAd;
+
+    int mAdvertCounter = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +56,7 @@ public class MainActivity extends AppCompatActivity
 
         initFirebase();
         initViewPager();
+        initAdverts();
     }
 
     private void initFirebase() {
@@ -107,6 +123,58 @@ public class MainActivity extends AppCompatActivity
         viewPager.setAdapter(fragmentAdapter);
         mTabLayout = findViewById(R.id.tabLayout);
         mTabLayout.setupWithViewPager(viewPager);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                mAdvertCounter++;
+
+                if (mAdvertCounter >= 10) {
+                    if (mRewardAd.isLoaded())
+                        mRewardAd.show();
+
+                    mAdvertCounter = 0;
+                } else if (mAdvertCounter == 5) {
+                    if (mInterstitialAd.isLoaded())
+                        mInterstitialAd.show();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+    }
+
+    private void initAdverts() {
+        MobileAds.initialize(this, "ca-app-pub-1369670350323074~6791506389");
+
+        mAdView = findViewById(R.id.adView);
+        mBannerAdRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(mBannerAdRequest);
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+        });
+
+        mRewardAd = MobileAds.getRewardedVideoAdInstance(this);
+        mRewardAd.setRewardedVideoAdListener(this);
+        mRewardAd.loadAd("ca-app-pub-3940256099942544/5224354917", new AdRequest.Builder().build());
     }
 
     public void onFragmentInteraction(Uri uri) {
@@ -119,5 +187,45 @@ public class MainActivity extends AppCompatActivity
 
     public void onMembersListFragmentInteraction(DummyContent.DummyItem item) {
         Log.i(TAG, "Members Fragment");
+    }
+
+    @Override
+    public void onRewardedVideoAdLoaded() {
+
+    }
+
+    @Override
+    public void onRewardedVideoAdOpened() {
+
+    }
+
+    @Override
+    public void onRewardedVideoStarted() {
+
+    }
+
+    @Override
+    public void onRewardedVideoAdClosed() {
+        mRewardAd.loadAd("ca-app-pub-3940256099942544/5224354917", new AdRequest.Builder().build());
+    }
+
+    @Override
+    public void onRewarded(RewardItem rewardItem) {
+
+    }
+
+    @Override
+    public void onRewardedVideoAdLeftApplication() {
+
+    }
+
+    @Override
+    public void onRewardedVideoAdFailedToLoad(int i) {
+
+    }
+
+    @Override
+    public void onRewardedVideoCompleted() {
+
     }
 }
