@@ -12,8 +12,8 @@ public class FragmentAdapter extends FragmentPagerAdapter {
 
     public Fragment getItem(int position) {
 
-        Fragment f = new Fragment();
-        return f;
+        Fragment page = ChatMessageFragment.newInstance("One","Two");
+        return page;
 
     }
 

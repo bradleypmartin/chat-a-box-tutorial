@@ -1,6 +1,7 @@
 package com.bradleypmartinsandbox.chat_a_box_tutorial;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +14,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ChatMessageFragment.OnFragmentInteractionListener {
 
     final String TAG = "FirebaseTest";
 
@@ -97,5 +98,9 @@ public class MainActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.viewPager);
         fragmentAdapter = new FragmentAdapter( getSupportFragmentManager() );
         viewPager.setAdapter(fragmentAdapter);
+    }
+
+    public void onFragmentInteraction(Uri uri) {
+        Log.i(TAG, "Fragment interaction listener");
     }
 }
