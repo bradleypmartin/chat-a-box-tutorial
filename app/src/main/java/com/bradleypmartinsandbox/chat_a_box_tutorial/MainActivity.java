@@ -16,7 +16,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity
-        implements ChatMessageFragment.OnFragmentInteractionListener, HistoryFragment.OnListFragmentInteractionListener {
+        implements ChatMessageFragment.OnFragmentInteractionListener,
+        HistoryFragment.OnListFragmentInteractionListener,
+        MembersFragment.OnListFragmentInteractionListener {
 
     final String TAG = "FirebaseTest";
 
@@ -108,5 +110,9 @@ public class MainActivity extends AppCompatActivity
 
     public void onHistoryListFragmentInteraction(DummyContent.DummyItem item) {
         Log.i(TAG, "History Fragment");
+    }
+
+    public void onMembersListFragmentInteraction(DummyContent.DummyItem item) {
+        Log.i(TAG, "Members Fragment");
     }
 }

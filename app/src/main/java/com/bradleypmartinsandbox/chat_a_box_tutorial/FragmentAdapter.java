@@ -21,7 +21,9 @@ public class FragmentAdapter extends FragmentPagerAdapter {
             case 1:
                 page = HistoryFragment.newInstance(1);
                 break;
-
+            case 2:
+                page = MembersFragment.newInstance(1);
+                break;
             default:
                 page = ChatMessageFragment.newInstance("One","Two");
                 break;
