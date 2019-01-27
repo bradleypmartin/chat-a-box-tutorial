@@ -12,9 +12,21 @@ public class FragmentAdapter extends FragmentPagerAdapter {
 
     public Fragment getItem(int position) {
 
-        Fragment page = ChatMessageFragment.newInstance("One","Two");
-        return page;
+        Fragment page = null;
 
+        switch (position) {
+            case 0:
+                page = ChatMessageFragment.newInstance("One","Two");
+                break;
+            case 1:
+                page = HistoryFragment.newInstance(1);
+                break;
+
+            default:
+                page = ChatMessageFragment.newInstance("One","Two");
+                break;
+        }
+        return page;
     }
 
 }

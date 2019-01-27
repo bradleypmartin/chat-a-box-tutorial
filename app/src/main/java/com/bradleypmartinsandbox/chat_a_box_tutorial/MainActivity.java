@@ -10,11 +10,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.bradleypmartinsandbox.chat_a_box_tutorial.dummy.DummyContent;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity implements ChatMessageFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity
+        implements ChatMessageFragment.OnFragmentInteractionListener, HistoryFragment.OnListFragmentInteractionListener {
 
     final String TAG = "FirebaseTest";
 
@@ -101,6 +103,10 @@ public class MainActivity extends AppCompatActivity implements ChatMessageFragme
     }
 
     public void onFragmentInteraction(Uri uri) {
-        Log.i(TAG, "Fragment interaction listener");
+        Log.i(TAG, "Chat Fragment");
+    }
+
+    public void onHistoryListFragmentInteraction(DummyContent.DummyItem item) {
+        Log.i(TAG, "History Fragment");
     }
 }
