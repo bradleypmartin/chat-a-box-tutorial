@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     String displayName;
 
     ViewPager viewPager;
+    FragmentAdapter fragmentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,5 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initViewPager() {
         viewPager = findViewById(R.id.viewPager);
+        fragmentAdapter = new FragmentAdapter( getSupportFragmentManager() );
+        viewPager.setAdapter(fragmentAdapter);
     }
 }
