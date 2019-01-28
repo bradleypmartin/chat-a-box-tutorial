@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.bradleypmartinsandbox.chat_a_box_tutorial.MembersFragment.OnListFragmentInteractionListener;
 import com.bradleypmartinsandbox.chat_a_box_tutorial.dummy.DummyContent.DummyItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,10 +19,10 @@ import java.util.List;
  */
 public class MembersRecyclerViewAdapter extends RecyclerView.Adapter<MembersRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final ArrayList<String> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MembersRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public MembersRecyclerViewAdapter(ArrayList<String> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -36,8 +37,8 @@ public class MembersRecyclerViewAdapter extends RecyclerView.Adapter<MembersRecy
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mIdView.setText(holder.mItem);
+        holder.mContentView.setText(holder.mItem);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +61,7 @@ public class MembersRecyclerViewAdapter extends RecyclerView.Adapter<MembersRecy
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public String mItem;
 
         public ViewHolder(View view) {
             super(view);
