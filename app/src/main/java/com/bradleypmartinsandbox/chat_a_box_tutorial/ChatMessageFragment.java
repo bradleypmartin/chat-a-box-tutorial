@@ -114,6 +114,8 @@ public class ChatMessageFragment extends Fragment {
 
                 DatabaseReference ref = mDatabase.getReference("chatMessages").child(nodeKey);
                 ref.setValue(chat);
+
+                mChatMessageEdit.setText("");
             }
         });
 

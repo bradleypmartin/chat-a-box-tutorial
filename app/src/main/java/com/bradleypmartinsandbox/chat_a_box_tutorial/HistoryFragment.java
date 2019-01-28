@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ import java.util.List;
  * interface.
  */
 public class HistoryFragment extends Fragment {
+
+    String TAG = "FirebaseTestHistory";
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -105,5 +108,9 @@ public class HistoryFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onHistoryListFragmentInteraction(DummyItem item);
+    }
+
+    public void routeChatMessage(ChatMessage chat) {
+        Log.i(TAG, "Chat message routed to history.");
     }
 }

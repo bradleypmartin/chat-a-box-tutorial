@@ -24,6 +24,11 @@ import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity
         implements ChatMessageFragment.OnFragmentInteractionListener,
@@ -34,6 +39,7 @@ public class MainActivity extends AppCompatActivity
 
     FirebaseApp app;
     FirebaseAuth auth;
+    FirebaseDatabase mDatabase;
 
     FirebaseAuth.AuthStateListener authStateListener;
     String displayName;
@@ -57,6 +63,7 @@ public class MainActivity extends AppCompatActivity
         initFirebase();
         initViewPager();
         initAdverts();
+        initDatabaseChat();
     }
 
     private void initFirebase() {
@@ -227,5 +234,27 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onRewardedVideoCompleted() {
 
+    }
+
+    public void initDatabaseChat() {
+        mDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference ref = mDatabase.getReference("chatMessages");
+
+        ValueEventListener listener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+
+                    ChatMessage chat = child.getValue(ChatMessage.class);
+                    Log.i(TAG + " Child : ", chat.toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        ref.addValueEventListener(listener);
     }
 }
