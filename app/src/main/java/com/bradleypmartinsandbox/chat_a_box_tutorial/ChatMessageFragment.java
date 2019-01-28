@@ -9,6 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 /**
@@ -34,6 +40,10 @@ public class ChatMessageFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     Button mSendButton;
+    EditText mChatMessageEdit;
+    FirebaseAuth mAuth;
+    FirebaseDatabase mDatabase;
+    String mDisplayName;
 
     public ChatMessageFragment() {
         // Required empty public constructor
@@ -64,6 +74,14 @@ public class ChatMessageFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        mDisplayName = user.getDisplayName();
+
+        Log.i(TAG, "Current Message user : Email: [" + user.getEmail() +
+        "] DisplayName : [" + user.getDisplayName() + "].");
     }
 
     @Override
@@ -73,11 +91,29 @@ public class ChatMessageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_chat_message, container, false);
 
         mSendButton = view.findViewById(R.id.chatSendButton);
+        mChatMessageEdit = view.findViewById(R.id.chatEditText);
 
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "Send Clicked");
+                Log.i(TAG, "Send Button Clicked");
+
+                ChatMessage chat = new ChatMessage();
+
+                String chatSender = mDisplayName;
+                String chatMessage = mChatMessageEdit.getText().toString();
+
+                android.text.format.DateFormat df = new android.text.format.DateFormat();
+                String chatSendTime = df.format("dd:MM:yyyy HH:mm:ss", new java.util.Date()).toString();
+
+                chat.chatSender = chatSender;
+                chat.chatSendTime = chatSendTime;
+                chat.chatText = chatMessage;
+
+                String nodeKey = chat.chatSendTime + " " + chat.chatSender;
+
+                DatabaseReference ref = mDatabase.getReference("chatMessages").child(nodeKey);
+                ref.setValue(chat);
             }
         });
 
