@@ -6,7 +6,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class FragmentAdapter extends FragmentPagerAdapter {
 
-    public FragmentAdapter(FragmentManager manager) { super(manager); }
+    HistoryFragment mHistory;
+
+    public FragmentAdapter(FragmentManager manager) {
+        super(manager);
+        mHistory = HistoryFragment.newInstance(1);
+    }
 
     public int getCount() { return 3; }
 
@@ -19,7 +24,7 @@ public class FragmentAdapter extends FragmentPagerAdapter {
                 page = ChatMessageFragment.newInstance("One","Two");
                 break;
             case 1:
-                page = HistoryFragment.newInstance(1);
+                page = mHistory;
                 break;
             case 2:
                 page = MembersFragment.newInstance(2);

@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity
         Log.i(TAG, "Chat Fragment");
     }
 
-    public void onHistoryListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onHistoryListFragmentInteraction(ChatMessage item) {
         Log.i(TAG, "History Fragment");
     }
 
@@ -243,9 +243,13 @@ public class MainActivity extends AppCompatActivity
         ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                HistoryFragment history = (HistoryFragment)fragmentAdapter.getItem(1);
+
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
 
                     ChatMessage chat = child.getValue(ChatMessage.class);
+                    history.routeChatMessage(chat);
                     Log.i(TAG + " Child : ", chat.toString());
                 }
             }
