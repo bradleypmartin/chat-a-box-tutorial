@@ -36,7 +36,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getChatSender());
+        holder.mIdView.setText(mValues.get(position).getChatSendTime());
         holder.mContentView.setText(mValues.get(position).getChatText());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {

@@ -15,6 +15,7 @@ import com.bradleypmartinsandbox.chat_a_box_tutorial.dummy.DummyContent;
 import com.bradleypmartinsandbox.chat_a_box_tutorial.dummy.DummyContent.DummyItem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -119,5 +120,7 @@ public class HistoryFragment extends Fragment {
 
         if (!mHistoryArray.contains(chat))
             mHistoryArray.add(chat);
+
+        Collections.sort(mHistoryArray, new ChatComparator());
     }
 }
