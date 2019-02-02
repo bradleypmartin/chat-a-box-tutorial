@@ -1,9 +1,11 @@
 package com.bradleypmartinsandbox.chat_a_box_tutorial;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -130,6 +132,13 @@ public class MainActivity extends AppCompatActivity
         viewPager.setAdapter(fragmentAdapter);
         mTabLayout = findViewById(R.id.tabLayout);
         mTabLayout.setupWithViewPager(viewPager);
+
+        int tabSelectedColor = ResourcesCompat.getColor( getResources(), R.color.colorPrimaryDark, null );
+        int tabNotSelectedColor = ResourcesCompat.getColor( getResources(), R.color.colorAccent, null );
+        mTabLayout.setTabTextColors( tabSelectedColor, tabNotSelectedColor );
+
+        int tabColors = ResourcesCompat.getColor( getResources(), R.color.colorPrimary, null);
+        mTabLayout.setBackground(new ColorDrawable(tabColors));
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
