@@ -38,7 +38,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         holder.mItem = mValues.get(position);
         holder.mChatSender.setText( holder.mItem.getChatSender() );
         holder.mChatText.setText( holder.mItem.getChatText() );
-        holder.mChatSendTime.setText( holder.mItem.getChatSendTime() );
+        holder.mChatSendTime.setText( "(" + holder.mItem.getChatSendTime() + ")" );
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
