@@ -34,6 +34,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import fr.tkeunebr.gravatar.Gravatar;
+
 public class MainActivity extends AppCompatActivity
         implements ChatMessageFragment.OnFragmentInteractionListener,
         HistoryFragment.OnListFragmentInteractionListener,
@@ -85,6 +87,7 @@ public class MainActivity extends AppCompatActivity
                             user.getEmail() + "] display name [" +
                             user.getDisplayName() + "]");
                     displayName = user.getDisplayName();
+                    initGravatars();
                 } else {
                     Log.i(TAG, "Auth state update : no valid current user logged on.");
                     displayName = "No valid user";
@@ -107,6 +110,7 @@ public class MainActivity extends AppCompatActivity
                 displayName = data.getStringExtra("displayName");
                 Log.i(TAG, "Intent returned display name : [" + displayName + "].");
                 auth.addAuthStateListener(authStateListener);
+                initGravatars();
             }
         }
     }
@@ -286,5 +290,13 @@ public class MainActivity extends AppCompatActivity
             }
         };
         ref.addValueEventListener(listener);
+    }
+
+    public void initGravatars() {
+        String myEmail = auth.getCurrentUser().getEmail();
+        String gravatarURL = Gravatar.init().with(myEmail).size(100).build();
+
+        DatabaseReference ref = mDatabase.getReference("userGravatars").child( displayName );
+        ref.setValue(gravatarURL);
     }
 }
