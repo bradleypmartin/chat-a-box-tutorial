@@ -1,9 +1,11 @@
 package com.bradleypmartinsandbox.chat_a_box_tutorial;
 
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bradleypmartinsandbox.chat_a_box_tutorial.MembersFragment.OnListFragmentInteractionListener;
@@ -37,8 +39,7 @@ public class MembersRecyclerViewAdapter extends RecyclerView.Adapter<MembersRecy
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(holder.mItem);
-        holder.mContentView.setText(holder.mItem);
+        holder.mChatUserView.setText(holder.mItem);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,20 +60,20 @@ public class MembersRecyclerViewAdapter extends RecyclerView.Adapter<MembersRecy
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        public final TextView mChatUserView;
+        public final ImageView mChatUserIconView;
         public String mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mChatUserView = view.findViewById(R.id.chatUser);
+            mChatUserIconView = view.findViewById(R.id.chatUserIcon);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString();
         }
     }
 }

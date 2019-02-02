@@ -1,15 +1,19 @@
 package com.bradleypmartinsandbox.chat_a_box_tutorial;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TableLayout;
 
 import com.bradleypmartinsandbox.chat_a_box_tutorial.dummy.DummyContent;
@@ -131,6 +135,13 @@ public class MainActivity extends AppCompatActivity
         mTabLayout = findViewById(R.id.tabLayout);
         mTabLayout.setupWithViewPager(viewPager);
 
+        int tabSelectedColor = ResourcesCompat.getColor( getResources(), R.color.colorPrimaryDark, null );
+        int tabNotSelectedColor = ResourcesCompat.getColor( getResources(), R.color.colorAccent, null );
+        mTabLayout.setTabTextColors( tabSelectedColor, tabNotSelectedColor );
+
+        int tabColors = ResourcesCompat.getColor( getResources(), R.color.colorPrimary, null);
+        mTabLayout.setBackground(new ColorDrawable(tabColors));
+
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -140,6 +151,13 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onPageSelected(int i) {
                 mAdvertCounter++;
+
+                InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+
+                if (i == 0)
+                    imm.showSoftInput(getCurrentFocus(), 0);
+                else
+                    imm.hideSoftInputFromWindow(mAdView.getWindowToken(), 0);
 
                 if (mAdvertCounter >= 10) {
                     if (mRewardAd.isLoaded())
