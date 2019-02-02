@@ -4,10 +4,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bradleypmartinsandbox.chat_a_box_tutorial.HistoryFragment.OnListFragmentInteractionListener;
 import com.bradleypmartinsandbox.chat_a_box_tutorial.dummy.DummyContent.DummyItem;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
@@ -20,10 +23,18 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
 
     private final List<ChatMessage> mValues;
     private final OnListFragmentInteractionListener mListener;
+    FirebaseAuth mAuth;
+    String mDisplayName = "Unknown";
 
     public HistoryRecyclerViewAdapter(List<ChatMessage> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if (user != null)
+            mDisplayName = user.getDisplayName();
     }
 
     @Override
@@ -39,6 +50,10 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         holder.mChatSender.setText( holder.mItem.getChatSender() );
         holder.mChatText.setText( holder.mItem.getChatText() );
         holder.mChatSendTime.setText( "(" + holder.mItem.getChatSendTime() + ")" );
+        holder.mChatIcon.setImageResource(R.drawable.common_google_signin_btn_icon_light);
+
+        if (holder.mItem.getChatSender().equals( mDisplayName ))
+            holder.mChatIcon.setImageResource(R.drawable.common_google_signin_btn_icon_dark);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,6 +77,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         public final TextView mChatSender;
         public final TextView mChatText;
         public final TextView mChatSendTime;
+        public final ImageView mChatIcon;
         public ChatMessage mItem;
 
         public ViewHolder(View view) {
@@ -70,6 +86,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
             mChatSender = view.findViewById(R.id.chatSender);
             mChatText = view.findViewById(R.id.chatMessageText);
             mChatSendTime = view.findViewById(R.id.chatSendTime);
+            mChatIcon = view.findViewById(R.id.chatIcon);
         }
 
         @Override
