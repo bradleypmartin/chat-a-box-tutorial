@@ -1,7 +1,9 @@
 package com.bradleypmartinsandbox.chat_a_box_tutorial;
 
 import android.media.Image;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +12,14 @@ import android.widget.TextView;
 
 import com.bradleypmartinsandbox.chat_a_box_tutorial.MembersFragment.OnListFragmentInteractionListener;
 import com.bradleypmartinsandbox.chat_a_box_tutorial.dummy.DummyContent.DummyItem;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -21,12 +29,19 @@ import java.util.List;
  */
 public class MembersRecyclerViewAdapter extends RecyclerView.Adapter<MembersRecyclerViewAdapter.ViewHolder> {
 
+    String TAG = "FirebaseTestMembers";
+
     private final ArrayList<String> mValues;
     private final OnListFragmentInteractionListener mListener;
+
+    HashMap<String, String> mUserGravatars;
+    FirebaseDatabase mDatabase;
 
     public MembersRecyclerViewAdapter(ArrayList<String> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
+
+        initGravatars();
     }
 
     @Override
@@ -75,5 +90,35 @@ public class MembersRecyclerViewAdapter extends RecyclerView.Adapter<MembersRecy
         public String toString() {
             return super.toString();
         }
+    }
+
+    public void initGravatars() {
+        mDatabase = FirebaseDatabase.getInstance();
+        mUserGravatars = new HashMap<String, String>();
+
+        DatabaseReference ref = mDatabase.getReference("userGravatars");
+        ValueEventListener listener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                mUserGravatars.clear();
+
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    String childKey = child.getKey();
+                    String childValue = (String) child.getValue();
+
+                    Log.i(TAG, "Child : key [" + childKey + "] value : [" + childValue + "].");
+                    mUserGravatars.put (childKey, childValue);
+                }
+
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        ref.addValueEventListener(listener);
     }
 }
