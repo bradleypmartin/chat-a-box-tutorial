@@ -1,5 +1,6 @@
 package com.bradleypmartinsandbox.chat_a_box_tutorial;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TableLayout;
 
 import com.bradleypmartinsandbox.chat_a_box_tutorial.dummy.DummyContent;
@@ -149,6 +151,13 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onPageSelected(int i) {
                 mAdvertCounter++;
+
+                InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+
+                if (i == 0)
+                    imm.showSoftInput(getCurrentFocus(), 0);
+                else
+                    imm.hideSoftInputFromWindow(mAdView.getWindowToken(), 0);
 
                 if (mAdvertCounter >= 10) {
                     if (mRewardAd.isLoaded())
