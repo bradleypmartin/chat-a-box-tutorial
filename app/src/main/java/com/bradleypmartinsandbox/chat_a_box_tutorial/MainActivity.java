@@ -24,6 +24,11 @@ import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity
         implements ChatMessageFragment.OnFragmentInteractionListener,
@@ -34,6 +39,7 @@ public class MainActivity extends AppCompatActivity
 
     FirebaseApp app;
     FirebaseAuth auth;
+    FirebaseDatabase mDatabase;
 
     FirebaseAuth.AuthStateListener authStateListener;
     String displayName;
@@ -57,6 +63,7 @@ public class MainActivity extends AppCompatActivity
         initFirebase();
         initViewPager();
         initAdverts();
+        initDatabaseChat();
     }
 
     private void initFirebase() {
@@ -181,11 +188,11 @@ public class MainActivity extends AppCompatActivity
         Log.i(TAG, "Chat Fragment");
     }
 
-    public void onHistoryListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onHistoryListFragmentInteraction(ChatMessage item) {
         Log.i(TAG, "History Fragment");
     }
 
-    public void onMembersListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onMembersListFragmentInteraction(String item) {
         Log.i(TAG, "Members Fragment");
     }
 
@@ -227,5 +234,39 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onRewardedVideoCompleted() {
 
+    }
+
+    public void initDatabaseChat() {
+        mDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference ref = mDatabase.getReference("chatMessages");
+
+        ValueEventListener listener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                HistoryFragment historyFragment = (HistoryFragment)fragmentAdapter.getItem(1);
+                MembersFragment membersFragment = (MembersFragment)fragmentAdapter.getItem(2);
+
+
+                // TODO: optimize this pattern for sorting chat history
+                historyFragment.clearChatMessages();
+
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+
+                    ChatMessage chat = child.getValue(ChatMessage.class);
+                    historyFragment.routeChatMessage(chat);
+                    membersFragment.routeChatMessage(chat.chatSender);
+                    Log.i(TAG + " Child : ", chat.toString());
+                }
+
+                historyFragment.sortChatMessages();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        ref.addValueEventListener(listener);
     }
 }

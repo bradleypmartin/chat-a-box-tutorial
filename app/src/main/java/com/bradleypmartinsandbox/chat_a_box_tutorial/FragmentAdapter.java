@@ -4,9 +4,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import java.lang.reflect.Member;
+
 public class FragmentAdapter extends FragmentPagerAdapter {
 
-    public FragmentAdapter(FragmentManager manager) { super(manager); }
+    HistoryFragment mHistoryFragment;
+    MembersFragment mMembersFragment;
+
+    public FragmentAdapter(FragmentManager manager) {
+        super(manager);
+        mHistoryFragment = HistoryFragment.newInstance(1);
+        mMembersFragment = MembersFragment.newInstance(1);
+    }
 
     public int getCount() { return 3; }
 
@@ -19,10 +28,10 @@ public class FragmentAdapter extends FragmentPagerAdapter {
                 page = ChatMessageFragment.newInstance("One","Two");
                 break;
             case 1:
-                page = HistoryFragment.newInstance(1);
+                page = mHistoryFragment;
                 break;
             case 2:
-                page = MembersFragment.newInstance(2);
+                page = mMembersFragment;
                 break;
             default:
                 page = ChatMessageFragment.newInstance("One","Two");

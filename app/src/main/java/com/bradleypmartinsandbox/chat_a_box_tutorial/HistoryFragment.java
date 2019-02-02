@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import android.view.ViewGroup;
 import com.bradleypmartinsandbox.chat_a_box_tutorial.dummy.DummyContent;
 import com.bradleypmartinsandbox.chat_a_box_tutorial.dummy.DummyContent.DummyItem;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,17 +26,22 @@ import java.util.List;
  */
 public class HistoryFragment extends Fragment {
 
+    String TAG = "FirebaseTestHistory";
+
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
+    ArrayList<ChatMessage> mHistoryArray;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
     public HistoryFragment() {
+        mHistoryArray = new ArrayList<ChatMessage>();
     }
 
     // TODO: Customize parameter initialization
@@ -69,7 +77,7 @@ public class HistoryFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new HistoryRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new HistoryRecyclerViewAdapter(mHistoryArray, mListener));
         }
         return view;
     }
@@ -104,6 +112,21 @@ public class HistoryFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onHistoryListFragmentInteraction(DummyItem item);
+        void onHistoryListFragmentInteraction(ChatMessage item);
+    }
+
+    public void clearChatMessages() {
+        mHistoryArray.clear();
+    }
+
+    public void routeChatMessage(ChatMessage chat) {
+        Log.i(TAG, "Chat message routed to history.");
+
+        if (!mHistoryArray.contains(chat))
+            mHistoryArray.add(chat);
+    }
+
+    public void sortChatMessages() {
+        Collections.sort(mHistoryArray, new ChatComparator());
     }
 }

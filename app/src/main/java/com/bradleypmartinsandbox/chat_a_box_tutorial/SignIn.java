@@ -35,7 +35,7 @@ public class SignIn extends AppCompatActivity {
     boolean loginInProgress = false;
     boolean registerInProgress = false;
 
-    String displayName;
+    String mDisplayName = "Unknown";
 
     FirebaseApp app;
     FirebaseAuth auth;
@@ -114,9 +114,9 @@ public class SignIn extends AppCompatActivity {
                     String email = emailEditText.getText().toString();
                     String password = passwordEditText.getText().toString();
                     String confirmPassword = confirmPasswordEditText.getText().toString();
-                    displayName = displayNameEditText.getText().toString();
+                    mDisplayName = displayNameEditText.getText().toString();
 
-                    registerNewUser(email, password, displayName);
+                    registerNewUser(email, password, mDisplayName);
                 }
             }
         });
@@ -129,18 +129,22 @@ public class SignIn extends AppCompatActivity {
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = auth.getCurrentUser();
+                FirebaseUser user = firebaseAuth.getCurrentUser();
 
                 if (user != null) {
-                    displayName = user.getDisplayName();
+                    String tempName = user.getDisplayName();
+                    if (tempName != null)
+                        mDisplayName = tempName;
+
                     Log.i(TAG, "User is logged in : email [" +
                             user.getEmail() + "] display name [" +
-                            displayName + "]");
+                            mDisplayName + "]");
 
                     if (registerInProgress) {
-                        setDisplayName(user);
+                        Log.i(TAG, "Should set display name now. Name: [" + mDisplayName + "]");
+                        setDisplayName(user, mDisplayName);
                     } else {
-                        displayName = user.getDisplayName();
+                        mDisplayName = user.getDisplayName();
                     }
                     loginInProgress = false;
                     registerInProgress = false;
@@ -161,7 +165,7 @@ public class SignIn extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     Log.i(TAG, "User registration successful.");
                 } else {
-                    Log.i(TAG, "User registration failed.");
+                    Log.i(TAG, "User registration response successful, but process failed.");
                 }
             }
         };
@@ -172,6 +176,10 @@ public class SignIn extends AppCompatActivity {
                 Log.i(TAG, "Registration call failed.");
             }
         };
+
+        Log.i(TAG, "SignIn : Registering : email [" + email
+                + "] password [" + password +
+                "] Display Name [" + displayName + "]");
 
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(success)
@@ -202,7 +210,7 @@ public class SignIn extends AppCompatActivity {
                 .addOnFailureListener(fail);
     }
 
-    private void setDisplayName(FirebaseUser user) {
+    private void setDisplayName(FirebaseUser user, String displayName) {
         UserProfileChangeRequest changeRequest = new UserProfileChangeRequest.Builder().setDisplayName(displayName).build();
         user.updateProfile(changeRequest);
     }
@@ -212,7 +220,7 @@ public class SignIn extends AppCompatActivity {
         Log.i(TAG, "Finishing Sign In activity.");
 
         Intent returningIntent = new Intent();
-        returningIntent.putExtra("displayName", displayName);
+        returningIntent.putExtra("displayName", mDisplayName);
         setResult(RESULT_OK, returningIntent);
 
         finish();
