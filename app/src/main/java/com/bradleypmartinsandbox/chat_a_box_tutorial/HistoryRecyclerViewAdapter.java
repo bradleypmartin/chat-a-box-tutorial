@@ -36,8 +36,9 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getChatSendTime());
-        holder.mContentView.setText(mValues.get(position).getChatText());
+        holder.mChatSender.setText( holder.mItem.getChatSender() );
+        holder.mChatText.setText( holder.mItem.getChatText() );
+        holder.mChatSendTime.setText( holder.mItem.getChatSendTime() );
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,20 +59,22 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        public final TextView mChatSender;
+        public final TextView mChatText;
+        public final TextView mChatSendTime;
         public ChatMessage mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mChatSender = view.findViewById(R.id.chatSender);
+            mChatText = view.findViewById(R.id.chatMessageText);
+            mChatSendTime = view.findViewById(R.id.chatSendTime);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString();
         }
     }
 }
