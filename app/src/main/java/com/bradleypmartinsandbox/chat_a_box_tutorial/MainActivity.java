@@ -247,6 +247,10 @@ public class MainActivity extends AppCompatActivity
                 HistoryFragment historyFragment = (HistoryFragment)fragmentAdapter.getItem(1);
                 MembersFragment membersFragment = (MembersFragment)fragmentAdapter.getItem(2);
 
+
+                // TODO: optimize this pattern for sorting chat history
+                historyFragment.clearChatMessages();
+
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
 
                     ChatMessage chat = child.getValue(ChatMessage.class);
@@ -254,6 +258,8 @@ public class MainActivity extends AppCompatActivity
                     membersFragment.routeChatMessage(chat.chatSender);
                     Log.i(TAG + " Child : ", chat.toString());
                 }
+
+                historyFragment.sortChatMessages();
             }
 
             @Override

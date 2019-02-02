@@ -115,12 +115,18 @@ public class HistoryFragment extends Fragment {
         void onHistoryListFragmentInteraction(ChatMessage item);
     }
 
+    public void clearChatMessages() {
+        mHistoryArray.clear();
+    }
+
     public void routeChatMessage(ChatMessage chat) {
         Log.i(TAG, "Chat message routed to history.");
 
         if (!mHistoryArray.contains(chat))
             mHistoryArray.add(chat);
+    }
 
+    public void sortChatMessages() {
         Collections.sort(mHistoryArray, new ChatComparator());
     }
 }

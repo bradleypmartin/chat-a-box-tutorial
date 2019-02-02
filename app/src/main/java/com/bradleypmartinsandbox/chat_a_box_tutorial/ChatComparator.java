@@ -1,26 +1,25 @@
 package com.bradleypmartinsandbox.chat_a_box_tutorial;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.Comparator;
-import java.util.Date;
-import java.util.Locale;
 
 public class ChatComparator implements Comparator<ChatMessage> {
 
+    private DateTimeFormatter mFormatter = DateTimeFormat.forPattern("dd:MM:yyyy HH:mm:ss");
+
     public int compare(ChatMessage left, ChatMessage right) {
         try {
-            // comparing two ChatMessages
-            Date leftDate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.ENGLISH)
-                    .parse(left.getChatSendTime());
-            Date rightDate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.ENGLISH)
-                    .parse(right.getChatSendTime());
-            if (leftDate.before(rightDate)) {
+            DateTime leftDT = mFormatter.parseDateTime(left.getChatSendTime());
+            DateTime rightDT = mFormatter.parseDateTime(right.getChatSendTime());
+            if (leftDT.isBefore(rightDT)) {
                 return 1;
-            } else if (leftDate.after(rightDate)) {
+            } else if (rightDT.isBefore(leftDT)) {
                 return -1;
             }
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return 0;
