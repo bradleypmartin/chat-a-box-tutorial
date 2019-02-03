@@ -1,6 +1,7 @@
 package com.bradleypmartinsandbox.chat_a_box_tutorial;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,8 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
     private final OnListFragmentInteractionListener mListener;
     FirebaseAuth mAuth;
     String mDisplayName = "Unknown";
+
+    String TAG = "FirebaseTestHistory";
 
     public HistoryRecyclerViewAdapter(List<ChatMessage> items, OnListFragmentInteractionListener listener) {
         mValues = items;
@@ -52,8 +55,12 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         holder.mChatSendTime.setText( "(" + holder.mItem.getChatSendTime() + ")" );
         holder.mChatIcon.setImageResource(R.drawable.common_google_signin_btn_icon_light);
 
-        if (holder.mItem.getChatSender().equals( mDisplayName ))
-            holder.mChatIcon.setImageResource(R.drawable.common_google_signin_btn_icon_dark);
+        try {
+            if (holder.mItem.getChatSender().equals(mDisplayName))
+                holder.mChatIcon.setImageResource(R.drawable.common_google_signin_btn_icon_dark);
+        } catch (Exception e) {
+            Log.e(TAG, "Problem with chat message avatar population: " + e);
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

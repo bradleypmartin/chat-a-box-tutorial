@@ -1,6 +1,6 @@
 package com.bradleypmartinsandbox.chat_a_box_tutorial;
 
-import android.media.Image;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,10 +17,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
@@ -36,10 +36,14 @@ public class MembersRecyclerViewAdapter extends RecyclerView.Adapter<MembersRecy
 
     HashMap<String, String> mUserGravatars;
     FirebaseDatabase mDatabase;
+    Context mActivityContext;
 
-    public MembersRecyclerViewAdapter(ArrayList<String> items, OnListFragmentInteractionListener listener) {
+    public MembersRecyclerViewAdapter(ArrayList<String> items,
+                                      OnListFragmentInteractionListener listener,
+                                      Context context) {
         mValues = items;
         mListener = listener;
+        mActivityContext = context;
 
         initGravatars();
     }
@@ -55,6 +59,21 @@ public class MembersRecyclerViewAdapter extends RecyclerView.Adapter<MembersRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mChatUserView.setText(holder.mItem);
+
+        String gravatarURL = "http://www.gravatar.com/avatar";
+        String memberName = mValues.get(position);
+
+        if (mUserGravatars.containsKey(memberName))
+            gravatarURL = mUserGravatars.get(memberName);
+
+        Log.i(TAG, "gravatarURL: " + gravatarURL);
+
+        // TODO: this image ingestion isn't working yet; I should make sure this functions correctly
+        //       next time I return to the project.
+        Picasso.get()
+                .load(gravatarURL)
+                .placeholder(R.drawable.common_google_signin_btn_icon_dark)
+                .into(holder.mChatUserIconView);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

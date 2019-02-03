@@ -295,8 +295,11 @@ public class MainActivity extends AppCompatActivity
     public void initGravatars() {
         String myEmail = auth.getCurrentUser().getEmail();
         String gravatarURL = Gravatar.init().with(myEmail).size(100).build();
-
-        DatabaseReference ref = mDatabase.getReference("userGravatars").child( displayName );
-        ref.setValue(gravatarURL);
+        try {
+            DatabaseReference ref = mDatabase.getReference("userGravatars").child(displayName);
+            ref.setValue(gravatarURL);
+        } catch (Exception e) {
+            Log.e(TAG, "Problem with populating userGravitars hash. Error: " + e);
+        }
     }
 }

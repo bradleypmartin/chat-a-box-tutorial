@@ -77,11 +77,16 @@ public class ChatMessageFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
-        mDisplayName = user.getDisplayName();
 
-        Log.i(TAG, "Current Message user : Email: [" + user.getEmail() +
-        "] DisplayName : [" + user.getDisplayName() + "].");
+        try {
+            FirebaseUser user = mAuth.getCurrentUser();
+            mDisplayName = user.getDisplayName();
+
+            Log.i(TAG, "Current Message user : Email: [" + user.getEmail() +
+                    "] DisplayName : [" + user.getDisplayName() + "].");
+        } catch (Exception e) {
+            Log.e(TAG, "Problem with Chat Message view; no user logged in. Log out to continue.");
+        }
     }
 
     @Override
